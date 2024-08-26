@@ -7,13 +7,13 @@ import http from 'http';
 
 const app = express();
 // Configure CORS to allow requests from sandbox.cds-hooks.org
-app.use(cors({
-    origin: '*',
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
-    allowedHeaders: ['authorization', 'Content-Type'],
-}));
+// app.use(cors({
+//     origin: '*',
+//     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
+//     allowedHeaders: ['authorization', 'Content-Type'],
+// }));
 
-app.use(bodyparse.json());
+app.use(express.json());
 
 const server = http.createServer(app);
 
@@ -46,7 +46,6 @@ app.get('/', (req, res) => {
 
 // Discovery endpoint
 app.get('/cds-services', (req, res)=>{
-    res.header('Access-Control-Allow-Headers', 'authorization, Content-Type');
     res.json(cdsServices);
 });
 
