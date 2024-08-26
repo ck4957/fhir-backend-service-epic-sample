@@ -10,11 +10,9 @@ const app = express();
 app.use(cors({
     origin: '*',
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
+    allowedHeaders: ['authorization', 'Content-Type'],
 }));
-app.use('/cds-services', cors({
-    origin: '*',
-    methods: ['GET', 'OPTIONS'],
-}));
+
 app.use(bodyparse.json());
 
 const server = http.createServer(app);
@@ -48,6 +46,7 @@ app.get('/', (req, res) => {
 
 // Discovery endpoint
 app.get('/cds-services', (req, res)=>{
+    res.header('Access-Control-Allow-Headers', 'authorization, Content-Type');
     res.json(cdsServices);
 });
 
