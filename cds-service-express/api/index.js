@@ -7,11 +7,7 @@ import http from 'http';
 
 const app = express();
 // Configure CORS to allow requests from sandbox.cds-hooks.org
-// app.use(cors({
-//     origin: '*',
-//     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
-//     allowedHeaders: ['authorization', 'Content-Type'],
-// }));
+app.use(cors());
 
 app.use(express.json());
 
