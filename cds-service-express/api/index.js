@@ -7,7 +7,12 @@ import http from 'http';
 
 const app = express();
 // Configure CORS to allow requests from sandbox.cds-hooks.org
-app.use(cors());
+app.use(cors({
+    origin: '*',
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
+    allowedHeaders: ['authorization', 'Content-Type'],
+
+}));
 
 app.use(express.json());
 
@@ -38,10 +43,22 @@ const cdsServices = {
 
 app.get('/', (req, res) => {
     res.send('CRD service is running');
+    res.setHeader("Access-Control-Allow-Origin", "*")
+    res.setHeader("Access-Control-Allow-Credentials", "true");
+    res.setHeader("Access-Control-Max-Age", "1800");
+    res.setHeader("Access-Control-Allow-Headers", "content-type");
+    res.setHeader( "Access-Control-Allow-Methods", "PUT, POST, GET, DELETE, PATCH, OPTIONS" ); 
 });
 
 // Discovery endpoint
 app.get('/cds-services', (req, res)=>{
+    
+    res.setHeader("Access-Control-Allow-Origin", "*")
+    res.setHeader("Access-Control-Allow-Credentials", "true");
+    res.setHeader("Access-Control-Max-Age", "1800");
+    res.setHeader("Access-Control-Allow-Headers", "content-type");
+    res.setHeader( "Access-Control-Allow-Methods", "PUT, POST, GET, DELETE, PATCH, OPTIONS" ); 
+
     res.json(cdsServices);
 });
 
