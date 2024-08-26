@@ -1,4 +1,6 @@
-Pronode_modules
+node_modules
+cds-service-express/node_modules
+epic-sample/node_modules
 .DS_Store
 dist
 dist-ssr
