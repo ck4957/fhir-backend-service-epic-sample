@@ -1,0 +1,59 @@
+version: "3.8"
+
+services:
+  iris:
+    image: intersystemsdc/irishealth-community:latest
+    container_name: revstream-iris
+    ports:
+      - "52773:52773" # Management Portal
+      - "51773:51773" # SuperServer (for Studio/VS Code connections)
+      - "2021:2021" # HL7 Inbound TCP (Business Service)
+      - "2022:2022" # HL7 Outbound TCP (to Billing System)
+    volumes:
+      - ./iris-data:/dur/irisdata
+      - ./src:/home/irisowner/src
+      - ./samples:/home/irisowner/samples
+      - ./cac-engine:/home/irisowner/cac-engine
+    environment:
+      - ISC_DATA_DIRECTORY=/dur/irisdata
+    command: --check-caps false
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:52773/csp/sys/UtilHome.csp"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+    networks:
+      - revstream-network
+
+  # Simulated Billing System (receives FT1 messages)
+  billing-simulator:
+    build:
+      context: ./billing-simulator
+      dockerfile: Dockerfile
+    container_name: revstream-billing
+    ports:
+      - "2022:2022"
+    volumes:
+      - ./billing-simulator/received:/app/received
+    networks:
+      - revstream-network
+    depends_on:
+      - iris
+
+  # HL7 Message Sender for Testing
+  hl7-sender:
+    build:
+      context: ./hl7-sender
+      dockerfile: Dockerfile
+    container_name: revstream-sender
+    volumes:
+      - ./samples:/app/samples
+    networks:
+      - revstream-network
+    depends_on:
+      - iris
+
+networks:
+  revstream-network:
+    driver: bridge

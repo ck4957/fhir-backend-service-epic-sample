@@ -1,0 +1,47 @@
+; RevStream Custom HL7 2.5 Schema Definition
+; This file defines custom message structures and segment groups for CAC/CDI integration
+
+[SegmentStructures]
+; Define the structure of custom Z-segments
+
+ZCD=ZCD.1!+ZCD.2!+ZCD.3!+ZCD.4+ZCD.5+ZCD.6+ZCD.7+ZCD.8
+ZCN=ZCN.1!+ZCN.2!+ZCN.3+ZCN.4+ZCN.5+ZCN.6+ZCN.7+ZCN.8
+
+[MessageTypes]
+; Custom message types for RevStream
+
+; Standard MDM^T02 with custom segments
+MDM_T02_REV=MSH!+EVN!+PID!+PV1+[{ORC}]+TXA!+[{OBX}]+[{ZCN}]+[{ZCD}]
+
+; Custom Financial Transaction with coding data
+DFT_P03_REV=MSH!+EVN+PID!+[PD1]+[ROL]+PV1+[PV2]+[ROL]+[{DB1}]+[FT1!+[{ZCD}]]+[{DG1}]+[DRG]+[{GT1}]+[{IN1+[IN2]+[IN3]+[ROL]}]
+
+[SegmentDataElements]
+; ZCD Segment - Coding Data
+ZCD.1=SI
+ZCD.2=ID
+ZCD.3=ST
+ZCD.4=ST
+ZCD.5=NM
+ZCD.6=ID
+ZCD.7=TS
+ZCD.8=XCN
+
+; ZCN Segment - Clinical Note Extended
+ZCN.1=SI
+ZCN.2=ID
+ZCN.3=ST
+ZCN.4=ST
+ZCN.5=ID
+ZCN.6=ID
+ZCN.7=XCN
+ZCN.8=TS
+
+[Tables]
+; Code tables for Z-segment fields
+
+RevStream.ZCDCodeType=ICD10,CPT,HCPCS,SNOMED,LOINC
+RevStream.ZCDSource=CAC,MANUAL,NLP,AI,ENCODER
+RevStream.ZCNNoteType=OPNOTE,DCSUMMARY,PROGRESS,HPI,CONSULT,RADIOLOGY,PATHOLOGY
+RevStream.ZCNStatus=PENDING,PROCESSING,REVIEW,COMPLETE,ERROR
+RevStream.ZCNPriority=STAT,ROUTINE,LOW
